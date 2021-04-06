@@ -7,14 +7,14 @@ from happytransformer import HappyWordPrediction
     
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-APP_ROOT = ""
+APP_ROOT = "/tt"
 app.config["APPLICATION_ROOT"] = APP_ROOT
 
 happy_wp = HappyWordPrediction("BERT", "TurkuNLP/bert-base-finnish-cased-v1")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html",app_root=APP_ROOT)
 
 @app.route("/predict",methods=["POST"])
 def predict():
