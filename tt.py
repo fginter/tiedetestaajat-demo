@@ -17,6 +17,8 @@ with open("kirosanat.txt") as f:
     re_parts=[]
     for line in f:
         line=line.strip()
+        if not line:
+            continue
         re_parts.append(f"({line})")
     kiro_re=re.compile("|".join(re_parts))
 
@@ -30,8 +32,11 @@ def predict():
     inpsentence=request.json["sentencein"].replace("SANA","[MASK]",1)
     if "[MASK]" not in inpsentence:
         return {"predictions_html":"Et muistanut laittaa yksi SANA."}
-    predictions = happy_wp.predict_mask(inpsentence,top_k=10)
-    predictions = [p for p in predictions if not kiro_re.match(p.token)]
+    predictions = happy_wp.predict_mask(inpsentence,top_k=100)
+    for p in predictions:
+        if kiro_re.match(p.token.lower()):
+            p.token=f"🔫**CENSORED** (was:{p.token})"
+    predictions = [p for p in predictions if not kiro_re.match(p.token.lower())]
     print(list(predictions))
     predictions_html=render_template("result.html",predictions=predictions)
     return {"predictions_html":predictions_html}
