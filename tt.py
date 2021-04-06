@@ -32,10 +32,10 @@ def predict():
     inpsentence=request.json["sentencein"].replace("SANA","[MASK]",1)
     if "[MASK]" not in inpsentence:
         return {"predictions_html":"Et muistanut laittaa yksi SANA."}
-    predictions = happy_wp.predict_mask(inpsentence,top_k=100)
+    predictions = happy_wp.predict_mask(inpsentence,top_k=10)
     for p in predictions:
         if kiro_re.match(p.token.lower()):
-            p.token=f"🔫**CENSORED** (was:{p.token})"
+            p.token=f"🤭"
     predictions = [p for p in predictions if not kiro_re.match(p.token.lower())]
     print(list(predictions))
     predictions_html=render_template("result.html",predictions=predictions)
