@@ -32,7 +32,10 @@ def predict():
     inpsentence=request.json["sentencein"].replace("SANA","[MASK]",1)
     if "[MASK]" not in inpsentence:
         return {"predictions_html":"Et muistanut laittaa yksi SANA."}
+    if len(inpsentence.split())>150:
+        return {"predictions_html":"Lause taitaa olla liian pitkä, noin 100 sanaa on maksiimi."}
     predictions = happy_wp.predict_mask(inpsentence,top_k=10)
+
     for p in predictions:
         if kiro_re.match(p.token.lower()):
             p.token=f"🤭"
