@@ -1,0 +1,5 @@
+<ul>
+{% for p in predictions %}
+<li> {{ p.token }} ({{"%.2f%%"|format(p.score*100)}}) </li>
+{% endfor %}
+</ul>
